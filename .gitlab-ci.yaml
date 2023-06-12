@@ -1,0 +1,47 @@
+image: node:14
+
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+
+cache:
+  paths:
+    - node_modules/
+
+services:
+  - docker:dind
+
+before_script:
+  - npm ci
+
+build:
+  stage: build
+  script:
+    - docker build -t myapp .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker tag myapp $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+test:
+  stage: test
+  script:
+    - npm run test
+
+deploy:
+  stage: deploy
+  image:
+    name: dtzar/helm-kubectl:latest
+    entrypoint: [""]
+  script:
+    - kubectl config set-cluster digitalocean --server=$KUBE_URL --insecure-skip-tls-verify=true
+    - kubectl config set-credentials cluster-user --token=$KUBE_TOKEN
+    - kubectl config set-context digitalocean --cluster=digitalocean --user=cluster-user
+    - kubectl config use-context digitalocean
+    - kubectl apply -f deployment/kubernetes/deployment.yaml
+    - kubectl apply -f deployment/kubernetes/service.yaml
+    - kubectl apply -f deployment/kubernetes/ingress.yaml

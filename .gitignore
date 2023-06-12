@@ -1,0 +1,19 @@
+# Arquivos e diretórios específicos da aplicação
+node_modules/
+dist/
+.env
+
+# Arquivos de log
+*.log
+
+# Arquivos gerados durante a construção
+build/
+tmp/
+package-lock.json
+
+# Arquivos de credenciais sensíveis
+credentials.json
+
+# Outros arquivos e diretórios desnecessários
+.DS_Store
+Thumbs.db

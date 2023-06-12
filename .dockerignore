@@ -1,0 +1,25 @@
+# Arquivos e diretórios específicos da aplicação
+node_modules/
+npm-debug.log
+.env
+
+# Arquivos e diretórios do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos e diretórios gerados pelo editor de código
+.vscode/
+*.swp
+*.swo
+
+# Outros arquivos e diretórios desnecessários
+*.log
+tmp/
+tests/
+deployment/
+.gitignore
+package-lock.json
+.gitlab-ci.yaml
+ansible.cfg
+docker-compose.yaml
+README.md
